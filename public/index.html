@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>成果详情</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: linear-gradient(180deg, #1a3a8f 0%, #0d1b3e 100%);
+      color: #fff;
+      min-height: 100vh;
+      padding-bottom: 80px;
+    }
+    
+    body.fullscreen {
+      padding-bottom: 0;
+    }
+    
+    /* 顶部导航栏 */
+    .header {
+      padding: 20px;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    
+    .header h1 {
+      font-size: 18px;
+      font-weight: 600;
+      margin: 0;
+    }
+    
+    .header .company {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.8);
+      margin-top: 5px;
+    }
+    
+    /* 主要内容区 */
+    .content {
+      padding: 20px;
+    }
+    
+    /* 轮播图区域 */
+    .media-section {
+      margin-bottom: 25px;
+      border-radius: 12px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.1);
+    }
+    
+    .media-placeholder {
+      width: 100%;
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-size: 40px;
+    }
+    
+    /* 企业信息 */
+    .company-info {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+    
+    .company-info h2 {
+      font-size: 18px;
+      margin-bottom: 15px;
+      color: #fff;
+    }
+    
+    .company-info p {
+      font-size: 14px;
+      line-height: 1.8;
+      color: rgba(255, 255, 255, 0.9);
+    }
+    
+    /* 荣誉资质 */
+    .honors {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 15px;
+    }
+    
+    .honor-tag {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    
+    /* 产品网格 */
+    .products {
+      margin-bottom: 20px;
+    }
+    
+    .products h2 {
+      font-size: 18px;
+      margin-bottom: 15px;
+    }
+    
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+    
+    .product-card {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 15px;
+      text-align: center;
+    }
+    
+    .product-card .icon {
+      font-size: 40px;
+      margin-bottom: 10px;
+    }
+    
+    .product-card h3 {
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+    
+    .product-card p {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.7);
+    }
+    
+    /* 联系方式 */
+    .contact {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+    
+    .contact h2 {
+      font-size: 18px;
+      margin-bottom: 15px;
+    }
+    
+    .contact-info p {
+      font-size: 14px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    /* 底部固定操作栏 */
+    .footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 70px;
+      background: #fff;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+    }
+    
+    .footer-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      background: none;
+      border: none;
+      color: #666;
+      font-size: 12px;
+      cursor: pointer;
+      padding: 8px 16px;
+      transition: all 0.3s;
+    }
+    
+    .footer-btn:hover {
+      color: #667eea;
+      transform: translateY(-2px);
+    }
+    
+    .footer-btn.primary {
+      color: #667eea;
+      font-weight: 600;
+    }
+    
+    .footer-btn .icon {
+      font-size: 20px;
+    }
+    
+    /* 弹窗样式 */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .modal-overlay.show {
+      opacity: 1;
+    }
+    
+    .modal {
+      background: #fff;
+      border-radius: 12px;
+      width: 85%;
+      max-width: 320px;
+      color: #333;
+      overflow: hidden;
+      transform: scale(0.9);
+      transition: transform 0.3s;
+    }
+    
+    .modal-overlay.show .modal {
+      transform: scale(1);
+    }
+    
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .modal-header h3 {
+      margin: 0;
+      font-size: 16px;
+      color: #333;
+    }
+    
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 24px;
+      color: #999;
+      cursor: pointer;
+      padding: 0;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-body {
+      padding: 30px 20px;
+      text-align: center;
+    }
+    
+    .tip-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-size: 15px;
+      color: #666;
+      line-height: 1.5;
+    }
+    
+    .tip-content .icon {
+      font-size: 24px;
+    }
+    
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      padding: 15px 20px;
+      border-top: 1px solid #eee;
+    }
+    
+    .btn-cancel, .btn-confirm {
+      padding: 10px 30px;
+      border-radius: 8px;
+      border: none;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .btn-cancel {
+      background: #f5f5f5;
+      color: #666;
+    }
+    
+    .btn-cancel:hover {
+      background: #e0e0e0;
+    }
+    
+    .btn-confirm {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+    }
+    
+    .btn-confirm:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+    
+    /* 分享引导层 */
+    .share-guide {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 10000;
+      display: none;
+    }
+    
+    .share-guide.show {
+      display: block;
+    }
+    
+    .share-guide-content {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      color: #fff;
+      text-align: right;
+    }
+    
+    .share-guide-content .arrow {
+      font-size: 40px;
+      margin-bottom: 10px;
+    }
+    
+    .share-guide-content p {
+      font-size: 16px;
+    }
+    
+    /* 加载状态 */
+    .loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      gap: 20px;
+    }
+    
+    .loading .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+  <!-- 加载状态 -->
+  <div id="loading" class="loading">
+    <div class="spinner"></div>
+    <p>加载中...</p>
+  </div>
+  
+  <!-- 主内容 -->
+  <div id="main" class="hidden">
+    <!-- 顶部导航栏 -->
+    <header class="header">
+      <h1 id="pageTitle">全球机器人开发选品选型服务中心</h1>
+      <p class="company" id="pageCompany">深圳市鑫信腾科技股份有限公司</p>
+    </header>
+    
+    <!-- 主要内容区 -->
+    <main class="content">
+      <!-- 轮播图/媒体区域 -->
+      <div class="media-section">
+        <div class="media-placeholder">🖼️</div>
+      </div>
+      
+      <!-- 企业信息 -->
+      <section class="company-info">
+        <h2>关于我们</h2>
+        <p>深圳市鑫信腾科技股份有限公司是国家级高新技术企业、国家级专精特新"小巨人"企业。</p>
+        <p>公司深耕智能制造领域多年，专注于基于视觉感知与灵巧作业的智能机器人研发。</p>
+        
+        <!-- 荣誉资质 -->
+        <div class="honors">
+          <div class="honor-tag">国家级高新技术企业</div>
+          <div class="honor-tag">国家级专精特新"小巨人"</div>
+          <div class="honor-tag">深圳市科技创新奖</div>
+        </div>
+      </section>
+      
+      <!-- 产品/成果展示 -->
+      <section class="products">
+        <h2>核心产品</h2>
+        <div class="product-grid">
+          <div class="product-card">
+            <div class="icon">🤖</div>
+            <h3>智能检测机器人</h3>
+            <p>高精度视觉检测</p>
+          </div>
+          <div class="product-card">
+            <div class="icon">⚙️</div>
+            <h3>自动化装配</h3>
+            <p>柔性生产系统</p>
+          </div>
+          <div class="product-card">
+            <div class="icon">👁️</div>
+            <h3>视觉检测系统</h3>
+            <p>AI 缺陷识别</p>
+          </div>
+          <div class="product-card">
+            <div class="icon">🏭</div>
+            <h3>智能产线</h3>
+            <p>整线解决方案</p>
+          </div>
+        </div>
+      </section>
+      
+      <!-- 联系方式 -->
+      <section class="contact">
+        <h2>联系我们</h2>
+        <div class="contact-info">
+          <p>📍 深圳市南山区粤海街道高新区社区</p>
+          <p>📞 400-888-8888</p>
+          <button onclick="copyWechat()" class="btn-confirm" style="margin-top: 15px; width: 100%;">
+            📋 复制微信号
+          </button>
+        </div>
+      </section>
+    </main>
+    
+    <!-- 底部固定操作栏 -->
+    <footer class="footer">
+      <button onclick="shareToWechat()" class="footer-btn">
+        <span class="icon">📤</span>
+        <span>分享</span>
+      </button>
+      <button onclick="callPhone()" class="footer-btn">
+        <span class="icon">📞</span>
+        <span>电话</span>
+      </button>
+      <button onclick="navigateTo()" class="footer-btn primary">
+        <span class="icon">📍</span>
+        <span>导航</span>
+      </button>
+    </footer>
+    
+    <!-- 全屏提示弹窗 -->
+    <div id="fullscreenModal" class="modal-overlay">
+      <div class="modal" onclick="event.stopPropagation()">
+        <div class="modal-header">
+          <h3>提示</h3>
+          <button class="close-btn" onclick="closeFullscreenTip()">×</button>
+        </div>
+        <div class="modal-body">
+          <p class="tip-content">
+            <span class="icon">ℹ️</span>
+            点击确定进入全屏模式<br/>获得更好的浏览体验
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-cancel" onclick="closeFullscreenTip()">取消</button>
+          <button class="btn-confirm" onclick="enterFullscreen()">确定</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 分享引导层 -->
+    <div id="shareGuide" class="share-guide" onclick="closeShareGuide()">
+      <div class="share-guide-content">
+        <div class="arrow">↗️</div>
+        <p>点击右上角「···」<br/>选择「分享到朋友圈」</p>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // 全局数据（硬编码）
+    const achievementData = {
+      id: 'demo001',
+      title: '全球机器人开发选品选型服务中心',
+      company: '深圳市鑫信腾科技股份有限公司',
+      description: '基于视觉感知与灵巧作业的智能机器人解决方案',
+      address: '深圳市南山区粤海街道高新区社区',
+      phone: '400-888-8888',
+      wechat: 'xintengtkeji',
+      location: {
+        lat: 22.5428,
+        lng: 114.0543
+      }
+    }
+    
+    const wechatId = 'xintengtkeji' // 微信号
+    
+    // 检测微信环境
+    function isWechat() {
+      return /micromessenger/i.test(navigator.userAgent)
+    }
+    
+    // 检测全屏状态
+    function checkFullscreen() {
+      return !!(
+        document.fullscreenElement ||
+        document.webkitIsFullScreen ||
+        document.mozFullScreen ||
+        document.msFullscreenElement ||
+        (window.innerHeight === screen.height && screen.width > 600)
+      )
+    }
+    
+    // 显示全屏提示
+    function showFullscreenTip() {
+      if (!checkFullscreen() && isWechat()) {
+        setTimeout(() => {
+          document.getElementById('fullscreenModal').classList.add('show')
+        }, 1500)
+      }
+    }
+    
+    // 关闭全屏提示
+    function closeFullscreenTip() {
+      document.getElementById('fullscreenModal').classList.remove('show')
+    }
+    
+    // 进入全屏
+    async function enterFullscreen() {
+      const elem = document.documentElement
+      
+      try {
+        if (elem.requestFullscreen) {
+          await elem.requestFullscreen()
+        } else if (elem.webkitRequestFullscreen) {
+          await elem.webkitRequestFullscreen()
+        } else if (elem.mozRequestFullScreen) {
+          await elem.mozRequestFullScreen()
+        } else if (elem.msRequestFullscreen) {
+          await elem.msRequestFullscreen()
+        }
+        
+        document.body.classList.add('fullscreen')
+        closeFullscreenTip()
+      } catch (error) {
+        console.warn('全屏失败:', error)
+        closeFullscreenTip()
+      }
+    }
+    
+    // 分享微信
+    function shareToWechat() {
+      if (window.WeixinJSBridge) {
+        WeixinJSBridge.invoke('shareTimeline', {
+          title: achievementData.title,
+          link: window.location.href
+        })
+      } else {
+        document.getElementById('shareGuide').classList.add('show')
+        setTimeout(() => {
+          closeShareGuide()
+        }, 5000)
+      }
+    }
+    
+    // 关闭分享引导
+    function closeShareGuide() {
+      document.getElementById('shareGuide').classList.remove('show')
+    }
+    
+    // 打电话
+    function callPhone() {
+      window.location.href = `tel:${achievementData.phone}`
+    }
+    
+    // 复制微信号
+    function copyWechat() {
+      navigator.clipboard.writeText(wechatId).then(() => {
+        alert('微信号已复制：' + wechatId)
+      }).catch(() => {
+        prompt('请手动复制微信号:', wechatId)
+      })
+    }
+    
+    // 导航
+    function navigateTo() {
+      const { lat, lng } = achievementData.location
+      if (isWechat()) {
+        window.location.href = `https://uri.amap.com/marker?position=${lng},${lat}&name=${encodeURIComponent(achievementData.company)}`
+      } else {
+        window.open(`https://uri.amap.com/marker?position=${lng},${lat}`)
+      }
+    }
+    
+    // 页面加载完成后初始化
+    document.addEventListener('DOMContentLoaded', () => {
+      // 显示主内容
+      document.getElementById('loading').classList.add('hidden')
+      document.getElementById('main').classList.remove('hidden')
+      
+      // 显示全屏提示
+      showFullscreenTip()
+      
+      // 监听全屏变化
+      document.addEventListener('fullscreenchange', () => {
+        if (document.fullscreenElement) {
+          document.body.classList.add('fullscreen')
+        } else {
+          document.body.classList.remove('fullscreen')
+        }
+      })
+    })
+  </script>
+</body>
+</html>
